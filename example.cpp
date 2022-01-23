@@ -1,5 +1,5 @@
 #include <iostream>
-#include "CDelegates.h"
+#include "src/includes/CDelegates.h"
 
 int print(const char* str) {
     std::cout << str << std::endl;
