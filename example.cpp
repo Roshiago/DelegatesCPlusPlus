@@ -6,8 +6,16 @@ int print(const char* str) {
     return 0;
 }
 
+void print_void(const char* str) {
+    std::cout << str << std::endl;
+}
+
 int valueBy6(int i) {
     return i * 6;
+}
+
+void valueBy6_print(int i) {
+    std::cout << i * 6 << std::endl;
 }
 
 class C {
@@ -26,13 +34,19 @@ public:
     }
 };
 
-typedef int(B::* getValueBy10)(int);
+// typedef int(B::* getValueBy10)(int);
+ClassMethodPtr(getValueBy10, B, int, int);
 
 int main(){
+    print_void("==== NON VOID DELEGATES ====");
+
     CDelegate<int, const char*> deleg;
-    deleg += WrapFunc<int, int(*)(const char*), const char*>(print);
-    deleg += WrapFunc<int, int(*)(const char*), const char*>(print);
-    deleg += WrapFunc<int, int(*)(const char*), const char*>(print);
+    deleg += WrapFunc<int, FuncDefinition(int, const char*), const char*>(print);
+    deleg += WrapFunc<int, FuncDefinition(int, const char*), const char*>(print);
+    deleg += WrapFunc<int, FuncDefinition(int, const char*), const char*>(print);
+    // deleg += WrapFunc<int, int(*)(const char*), const char*>(print);
+    // deleg += WrapFunc<int, int(*)(const char*), const char*>(print);
+    // deleg += WrapFunc<int, int(*)(const char*), const char*>(print);
     /*
     Will be printed HELLO WORLD 3 times
     */
@@ -67,6 +81,20 @@ int main(){
     for (std::list<int>::iterator i = results.begin(); i != results.end(); i++) {
         std::cout << *i << std::endl;
     }
+
+    print_void("==== VOID DELEGATES ====");
+
+    CDelegate<void, int> voidDelegFunc;
+
+    voidDelegFunc += WrapFunc<void, void(*)(int), int>(valueBy6_print);
+    voidDelegFunc += WrapFunc<void, void(*)(int), int>(valueBy6_print);
+
+    voidDelegFunc(5);
+
+    CDelegate<void, const char*> voidDelegFunc1;
+    voidDelegFunc1 += WrapFunc<void, void(*)(const char*), const char*>(print_void);
+
+    voidDelegFunc1("hello world");
 
     return 0;
 }
