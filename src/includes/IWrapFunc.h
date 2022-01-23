@@ -1,8 +1,8 @@
 #ifndef WrapFuncTemplate
 #define WrapFuncTemplate
 
-#define ClassMethodPtr(name, class_name, retr_type, args) typedef retr_type(class_name::* name)(args)
-#define FuncDefinition(retr_type, args) retr_type(*)(args)
+#define ClsMethodDef(name, class_name, retr_type, args) retr_type(class_name::* name)(args)
+#define FuncDef(retr_type, args) retr_type(*)(args)
 
 
 template<class RetrType, typename ...Args>

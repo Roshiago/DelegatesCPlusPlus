@@ -35,15 +35,15 @@ public:
 };
 
 // typedef int(B::* getValueBy10)(int);
-ClassMethodPtr(getValueBy10, B, int, int);
+typedef ClsMethodDef(getValueBy10, B, int, int);
 
 int main(){
     print_void("==== NON VOID DELEGATES ====");
 
     CDelegate<int, const char*> deleg;
-    deleg += WrapFunc<int, FuncDefinition(int, const char*), const char*>(print);
-    deleg += WrapFunc<int, FuncDefinition(int, const char*), const char*>(print);
-    deleg += WrapFunc<int, FuncDefinition(int, const char*), const char*>(print);
+    deleg += WrapFunc<int, FuncDef(int, const char*), const char*>(print);
+    deleg += WrapFunc<int, FuncDef(int, const char*), const char*>(print);
+    deleg += WrapFunc<int, FuncDef(int, const char*), const char*>(print);
     // deleg += WrapFunc<int, int(*)(const char*), const char*>(print);
     // deleg += WrapFunc<int, int(*)(const char*), const char*>(print);
     // deleg += WrapFunc<int, int(*)(const char*), const char*>(print);
@@ -57,15 +57,15 @@ int main(){
     B b;
     delegClass += WrapMethod<int, C, getValue, int>(&a, &C::getValue);
     delegClass += WrapMethod<int, B, getValueBy10, int>(&b, &B::getValueBy10);
-    std::list<int> results = delegClass(5);
+    std::vector<int> results = delegClass(5);
     /*
     Will be printed: 
         5
         50
 
     */
-    for (std::list<int>::iterator i = results.begin(); i != results.end(); i++) {
-        std::cout << *i << std::endl;
+    for(auto& i: results) {
+        std::cout << i << std::endl;
     }
 
     CDelegate<int, int> delegClassAndFunc;
@@ -78,8 +78,8 @@ int main(){
         30
 
     */
-    for (std::list<int>::iterator i = results.begin(); i != results.end(); i++) {
-        std::cout << *i << std::endl;
+    for (auto& i : results) {
+        std::cout << i << std::endl;
     }
 
     print_void("==== VOID DELEGATES ====");

@@ -2,15 +2,16 @@
 #define _CDELEGATES_
 
 #include "IWrapFunc.h"
-#include <list>
+#include <vector>
 
 template<typename RetrType, typename ...Args>
 class CDelegate{
 public:
-    CDelegate(){
+    using RefWrap = IWrapFunc<RetrType, Args...>*;
 
-    }
-    CDelegate operator+(IWrapFunc<RetrType, Args...>* f){
+    CDelegate() = default;
+
+    CDelegate operator+(RefWrap f){
         CDelegate<RetrType, Args...> delegate;
         for(auto f_t: this->m_funcs){
             delegate.m_funcs.push_back(f_t);
@@ -19,13 +20,14 @@ public:
         return delegate;
     }
     
-    CDelegate& operator+=(IWrapFunc<RetrType, Args...>* f){
+    CDelegate& operator+=(RefWrap f){
         m_funcs.push_back(f);
         return *this;
     }
+
     template<class R = RetrType>
-    typename std::enable_if<!std::is_same<R, void>::value, std::list<RetrType>>::type operator()(Args... params){
-        std::list<RetrType> output;
+    typename std::enable_if<!std::is_same<R, void>::value, std::vector<RetrType>>::type operator()(Args... params){
+        std::vector<RetrType> output;
         for(auto& f: m_funcs){
             output.push_back(f->Invoke(params...));
         }
@@ -38,15 +40,8 @@ public:
             f->Invoke(params...);
         }
     }
-
-    void clear() {
-        for (auto& f : m_funcs) {
-            delete f;
-        }
-    }
-
 private:
-    std::list<IWrapFunc<RetrType, Args...>*> m_funcs;
+    std::vector<RefWrap> m_funcs;
 };
 
 #endif // !_CDELEGATES_
